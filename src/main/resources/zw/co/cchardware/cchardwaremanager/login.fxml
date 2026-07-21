@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="zw.co.cchardware.cchardwaremanager.LoginController"
+      alignment="CENTER"
+      spacing="15">
+
+    <padding>
+        <Insets top="25" right="25" bottom="25" left="25"/>
+    </padding>
+
+    <Label text="CC HARDWARE MANAGER"
+           style="-fx-font-size:22px; -fx-font-weight:bold;"/>
+
+    <TextField fx:id="usernameField"
+               promptText="Username"
+               maxWidth="250"/>
+
+    <PasswordField fx:id="passwordField"
+                   promptText="Password"
+                   maxWidth="250"/>
+
+    <Button text="Login"
+            onAction="#login"
+            maxWidth="250"/>
+
+</VBox>
