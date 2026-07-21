@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="zw.co.cchardware.cchardwaremanager.InventoryController">
+
+    <top>
+        <Label text="📦 INVENTORY"
+               style="-fx-font-size:24px;
+                      -fx-font-weight:bold;
+                      -fx-padding:20;"/>
+    </top>
+
+    <center>
+
+        <VBox spacing="15" alignment="CENTER">
+            <padding>
+        <Insets top="20"
+                right="20"
+                bottom="20"
+                left="20"/>
+        </padding>
+
+
+            <Label text="Inventory"
+                   style="-fx-font-size:22px;
+                      -fx-font-weight:bold;" />
+
+            <HBox spacing="10" alignment="CENTER_LEFT">
+
+                <Button text="Add Item"
+                        onAction="#addItem"/>
+
+                <Button
+                        text="Edit Item"
+                        onAction="#editItem"/>
+
+                <Button
+                        text="Delete Item"
+                        onAction="#deleteItem"/>
+
+            </HBox>
+
+
+            <TableView fx:id="inventoryTable"
+                       prefWidth="700"
+                       prefHeight="350">
+
+                <columns>
+
+                    <TableColumn fx:id="idColumn" text="ID"/>
+
+                    <TableColumn fx:id="nameColumn" text="Item"/>
+
+                    <TableColumn fx:id="categoryColumn" text="Category"/>
+
+                    <TableColumn fx:id="priceColumn" text="Price"/>
+
+                    <TableColumn fx:id="quantityColumn" text="Quantity"/>
+
+                </columns>
+
+            </TableView>
+
+        </VBox>
+
+    </center>
+
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+</BorderPane>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="zw.co.cchardware.cchardwaremanager.AddItemController"
+      spacing="10"
+      alignment="CENTER">
+
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <Label text="Add New Item"
+           style="-fx-font-size:18px; -fx-font-weight:bold;"/>
+
+    <TextField fx:id="nameField" promptText="Item Name"/>
+
+    <TextField fx:id="categoryField" promptText="Category"/>
+
+    <TextField fx:id="purchasePriceField" promptText="Purchase Price"/>
+
+    <TextField fx:id="sellingPriceField" promptText="Selling Price"/>
+
+    <TextField fx:id="quantityField" promptText="Quantity"/>
+
+    <Button text="Save"
+            onAction="#saveItem"/>
+
+</VBox>
