@@ -6,8 +6,22 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import java.sql.Connection;
 
 public class LoginController {
+
+    public void initialize() {
+
+        Connection connection = DatabaseConnection.connect();
+
+        DatabaseConnection.createTable();
+
+        if (connection != null) {
+            System.out.println("Database connected successfully!");
+        } else {
+            System.out.println("Database connection failed!");
+        }
+    }
 
     @FXML
     private void login(ActionEvent event) throws Exception {
