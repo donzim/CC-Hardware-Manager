@@ -16,21 +16,103 @@
 
     <center>
 
-        <VBox spacing="15" alignment="CENTER">
+        <VBox spacing="20" alignment="TOP_CENTER">
 
-            <Button text="🛒 New Sale" prefWidth="220"/>
+            <!-- Statistics Section -->
+            <HBox spacing="20" alignment="CENTER">
 
-            <Button text="📦 Inventory" prefWidth="220" onAction="#openInventory"/>
+                <VBox alignment="CENTER"
+                      style="-fx-border-color: lightgray;
+                         -fx-border-radius: 5;
+                         -fx-padding: 15;
+                         -fx-background-color: #f8f8f8;">
 
-            <Button text="🧾 Quotations" prefWidth="220"/>
+                    <Label text="📦 Total Products"/>
+                    <Label fx:id="totalProductsLabel"
+                           text="0"
+                           style="-fx-font-size:22px; -fx-font-weight:bold;"/>
 
-            <Button text="📄 Receipts" prefWidth="220"/>
+                </VBox>
 
-            <Button text="📊 Reports" prefWidth="220"/>
+                <VBox alignment="CENTER"
+                      style="-fx-border-color: lightgray;
+                         -fx-border-radius: 5;
+                         -fx-padding: 15;
+                         -fx-background-color: #f8f8f8;">
 
-            <Button text="⚙ Settings" prefWidth="220"/>
+                    <Label text="📦 Stock Units"/>
+                    <Label fx:id="totalStockLabel"
+                           text="0"
+                           style="-fx-font-size:22px; -fx-font-weight:bold;"/>
 
-            <Button text="Logout" prefWidth="220"/>
+                </VBox>
+
+                <VBox alignment="CENTER"
+                      style="-fx-border-color: lightgray;
+                         -fx-border-radius: 5;
+                         -fx-padding: 15;
+                         -fx-background-color: #f8f8f8;">
+
+                    <Label text="⚠ Low Stock"/>
+                    <Label fx:id="lowStockLabel"
+                           text="0"
+                           style="-fx-font-size:22px; -fx-font-weight:bold;"/>
+
+                </VBox>
+
+            </HBox>
+
+
+            <HBox spacing="20" alignment="CENTER">
+
+                <VBox alignment="CENTER"
+                      style="-fx-border-color: lightgray;
+                 -fx-border-radius: 5;
+                 -fx-padding: 15;
+                 -fx-background-color: #f8f8f8;">
+
+                    <Label text="💰 Inventory Cost"/>
+                    <Label fx:id="inventoryCostLabel"
+                           text="\$0.00"
+                           style="-fx-font-size:22px; -fx-font-weight:bold;"/>
+
+                </VBox>
+
+                <VBox alignment="CENTER"
+                      style="-fx-border-color: lightgray;
+                 -fx-border-radius: 5;
+                 -fx-padding: 15;
+                 -fx-background-color: #f8f8f8;">
+
+                    <Label text="💵 Potential Sales"/>
+                    <Label fx:id="potentialSalesLabel"
+                           text="\$0.00"
+                           style="-fx-font-size:22px; -fx-font-weight:bold;"/>
+
+                </VBox>
+
+            </HBox>
+
+            <!-- Navigation -->
+            <VBox spacing="15" alignment="CENTER">
+
+                <Button text="🛒 New Sale" prefWidth="220"/>
+
+                <Button text="📦 Inventory"
+                        prefWidth="220"
+                        onAction="#openInventory"/>
+
+                <Button text="🧾 Quotations" prefWidth="220"/>
+
+                <Button text="📄 Receipts" prefWidth="220"/>
+
+                <Button text="📊 Reports" prefWidth="220"/>
+
+                <Button text="⚙ Settings" prefWidth="220"/>
+
+                <Button text="Logout" prefWidth="220"/>
+
+            </VBox>
 
         </VBox>
 

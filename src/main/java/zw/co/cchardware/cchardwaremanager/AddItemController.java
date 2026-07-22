@@ -61,9 +61,6 @@ public class AddItemController {
                     Double.parseDouble(sellingPriceField.getText());  //don
             int quantity = Integer.parseInt(quantityField.getText());
 
-
-
-
             if (itemBeingEdited == null) {
 
                 Item item = buildItem(
@@ -74,7 +71,8 @@ public class AddItemController {
                         quantity
                 );
 
-                inventoryController.addItemToTable(item);
+                DatabaseConnection.insertItem(item);
+                inventoryController.refreshTable();
 
             } else {
 
@@ -84,13 +82,13 @@ public class AddItemController {
                 itemBeingEdited.setSellingPrice(sellingPrice);
                 itemBeingEdited.setQuantity(quantity);
 
+                DatabaseConnection.updateItem(itemBeingEdited);
+
                 inventoryController.refreshTable();
 
             }
 
             clearForm();
-
-
 
 
         } catch (NumberFormatException e) {
@@ -124,7 +122,6 @@ public class AddItemController {
                            int quantity) {
 
         return new Item(
-                inventoryController.getNextId(),
                 name,
                 category,
                 purchasePrice,

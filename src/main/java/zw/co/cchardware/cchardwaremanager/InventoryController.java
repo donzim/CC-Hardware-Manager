@@ -11,7 +11,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
+import javafx.collections.transformation.FilteredList;
+import javafx.scene.control.TextField;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -41,36 +42,50 @@ public class InventoryController implements Initializable {
     @FXML
     private TableColumn<Item, Integer> quantityColumn;
 
-    private int nextId = 5;  public int getNextId() {
-        System.out.println("Next ID: " + nextId);
-        return nextId++;
-    }
+    @FXML
+    private TableColumn<Item, Double> purchasePriceColumn;
+
+    @FXML
+    private TextField searchField;
+
 
     private ObservableList<Item> items = FXCollections.observableArrayList();
+    private FilteredList<Item> filteredItems;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         categoryColumn.setCellValueFactory(new PropertyValueFactory<>("category"));
-        priceColumn.setCellValueFactory(new PropertyValueFactory<>("sellingPrice"));
-        quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        purchasePriceColumn.setCellValueFactory(
+                new PropertyValueFactory<>("purchasePrice"));
+        priceColumn.setCellValueFactory(
+                new PropertyValueFactory<>("sellingPrice"));
+        quantityColumn.setCellValueFactory(
+                new PropertyValueFactory<>("quantity"));
 
-        items.addAll(
+        items.addAll(DatabaseConnection.getAllItems());
 
-                new Item(1, "4 Inch Nails", "Fasteners", 3.50, 4.50, 320),
-                new Item(2, "PPC Cement", "Building", 11.00, 13.20, 75),
-                new Item(3, "PVC Pipe", "Plumbing", 6.80, 8.90, 120),
-                new Item(4, "Roofing Nails", "Fasteners", 4.20, 5.75, 180)
+        filteredItems = new FilteredList<>(items, p -> true);
 
-        );
+        inventoryTable.setItems(filteredItems);
 
-        inventoryTable.setItems(items);
-    }
-    public void addItemToTable(Item item) {
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
 
-        items.add(item);
+            filteredItems.setPredicate(item -> {
 
+                if (newValue == null || newValue.isBlank()) {
+                    return true;
+                }
+
+                String search = newValue.toLowerCase();
+
+                return item.getName().toLowerCase().contains(search)
+                        || item.getCategory().toLowerCase().contains(search);
+
+            });
+
+        });
     }
     @FXML
     private void addItem() {
@@ -131,7 +146,11 @@ public class InventoryController implements Initializable {
     }
 
     public void refreshTable() {
-        inventoryTable.refresh();
+
+        items.clear();
+
+        items.addAll(DatabaseConnection.getAllItems());
+
     }
 
 
@@ -163,6 +182,8 @@ public class InventoryController implements Initializable {
         ButtonType result = confirmation.showAndWait().orElse(ButtonType.CANCEL);
 
         if (result == ButtonType.OK) {
+
+            DatabaseConnection.deleteItem(selectedItem.getId());
 
             items.remove(selectedItem);
 

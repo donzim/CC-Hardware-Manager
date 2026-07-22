@@ -19,6 +19,16 @@ public class Item {
         this.sellingPrice = sellingPrice;
         this.quantity = quantity;
     }
+
+    public Item(String name, String category,
+                double purchasePrice, double sellingPrice, int quantity) {
+
+        this.name = name;
+        this.category = category;
+        this.purchasePrice = purchasePrice;
+        this.sellingPrice = sellingPrice;
+        this.quantity = quantity;
+    }
     public int getId() {
         return id;
     }

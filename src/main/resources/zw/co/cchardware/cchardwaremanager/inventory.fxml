@@ -26,41 +26,56 @@
         </padding>
 
 
-            <Label text="Inventory"
-                   style="-fx-font-size:22px;
-                      -fx-font-weight:bold;" />
-
             <HBox spacing="10" alignment="CENTER_LEFT">
 
                 <Button text="Add Item"
                         onAction="#addItem"/>
 
-                <Button
-                        text="Edit Item"
+                <Button text="Edit Item"
                         onAction="#editItem"/>
 
-                <Button
-                        text="Delete Item"
+                <Button text="Delete Item"
                         onAction="#deleteItem"/>
+
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <Label text="Search:"/>
+
+                <TextField fx:id="searchField"
+                           promptText="Search inventory..."/>
 
             </HBox>
 
 
             <TableView fx:id="inventoryTable"
-                       prefWidth="700"
+                       prefWidth="760"
                        prefHeight="350">
 
                 <columns>
 
-                    <TableColumn fx:id="idColumn" text="ID"/>
+                    <TableColumn fx:id="idColumn"
+                                 text="ID"
+                                 prefWidth="50"/>
 
-                    <TableColumn fx:id="nameColumn" text="Item"/>
+                    <TableColumn fx:id="nameColumn"
+                                 text="Item"
+                                 prefWidth="170"/>
 
-                    <TableColumn fx:id="categoryColumn" text="Category"/>
+                    <TableColumn fx:id="categoryColumn"
+                                 text="Category"
+                                 prefWidth="120"/>
 
-                    <TableColumn fx:id="priceColumn" text="Price"/>
+                    <TableColumn fx:id="purchasePriceColumn"
+                                 text="Purchase Price"
+                                 prefWidth="120"/>
 
-                    <TableColumn fx:id="quantityColumn" text="Quantity"/>
+                    <TableColumn fx:id="priceColumn"
+                                 text="Selling Price"
+                                 prefWidth="120"/>
+
+                    <TableColumn fx:id="quantityColumn"
+                                 text="Quantity"
+                                 prefWidth="100"/>
 
                 </columns>
 
