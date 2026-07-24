@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="zw.co.cchardware.cchardwaremanager.LowStockController">
+
+    <top>
+        <Label text="⚠ Low Stock Items"
+               style="-fx-font-size:20px;
+                      -fx-font-weight:bold;
+                      -fx-padding:15;"/>
+    </top>
+
+    <center>
+        <TableView fx:id="lowStockTable">
+
+            <columns>
+
+                <TableColumn fx:id="nameColumn"
+                             text="Product"
+                             prefWidth="180"/>
+
+                <TableColumn fx:id="categoryColumn"
+                             text="Category"
+                             prefWidth="150"/>
+
+                <TableColumn fx:id="quantityColumn"
+                             text="Quantity"
+                             prefWidth="100"/>
+
+                <TableColumn fx:id="statusColumn"
+                             text="Status"
+                             prefWidth="120"/>
+
+            </columns>
+
+        </TableView>
+    </center>
+
+</BorderPane>

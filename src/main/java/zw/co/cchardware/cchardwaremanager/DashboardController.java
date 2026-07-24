@@ -7,6 +7,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
+import javafx.scene.Node;
 
 import java.io.IOException;
 import java.text.NumberFormat;
@@ -26,6 +27,9 @@ public class DashboardController {
     private Label potentialSalesLabel;
 
     @FXML
+    private Label lowStockLabel;
+
+    @FXML
     public void initialize() {
 
         int totalProducts = DatabaseConnection.getTotalProducts();
@@ -42,7 +46,11 @@ public class DashboardController {
 
         double potentialSales = DatabaseConnection.getPotentialSalesValue();
 
-        potentialSalesLabel.setText("US" + currency.format(potentialSales));
+        potentialSalesLabel.setText("" + currency.format(potentialSales));
+
+        int lowStock = DatabaseConnection.getLowStockCount();
+
+        lowStockLabel.setText(String.valueOf(lowStock));
     }
 
     public void openInventory(ActionEvent event) throws IOException {
@@ -58,6 +66,36 @@ public class DashboardController {
         stage.setScene(new Scene(root, 850, 500));
         stage.setTitle("Inventory");
 
+        stage.show();
+    }
+
+    @FXML
+    private void openLowStock(ActionEvent event) throws IOException {
+
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource("low-stock.fxml"));
+
+        Parent root = loader.load();
+
+        Stage stage = new Stage();
+
+        stage.setTitle("Low Stock Items");
+        stage.setScene(new Scene(root));
+
+        stage.show();
+    }
+    @FXML
+    private void openSales(ActionEvent event) throws IOException {
+
+        FXMLLoader loader =
+                new FXMLLoader(getClass().getResource("sales.fxml"));
+
+        Parent root = loader.load();
+
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+        stage.setScene(new Scene(root));
+        stage.setTitle("New Sale");
         stage.show();
     }
 }

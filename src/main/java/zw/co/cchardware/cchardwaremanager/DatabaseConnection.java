@@ -8,6 +8,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 public class DatabaseConnection {
 
@@ -230,5 +232,55 @@ public class DatabaseConnection {
         }
 
         return 0.0;
+    }
+
+    public static int getLowStockCount() {
+
+        String sql = "SELECT COUNT(*) FROM items WHERE quantity <= 10";
+
+        try (Connection connection = connect();
+             Statement statement = connection.createStatement();
+             ResultSet result = statement.executeQuery(sql)) {
+
+            if (result.next()) {
+                return result.getInt(1);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return 0;
+    }
+
+    public static ObservableList<Item> getLowStockItems() {
+
+        ObservableList<Item> lowStockItems = FXCollections.observableArrayList();
+
+        String sql = "SELECT * FROM items WHERE quantity <= 10 ORDER BY quantity ASC";
+
+        try (Connection connection = connect();
+             Statement statement = connection.createStatement();
+             ResultSet result = statement.executeQuery(sql)) {
+
+            while (result.next()) {
+
+                Item item = new Item(
+                        result.getInt("id"),
+                        result.getString("name"),
+                        result.getString("category"),
+                        result.getDouble("purchase_price"),
+                        result.getDouble("selling_price"),
+                        result.getInt("quantity")
+                );
+
+                lowStockItems.add(item);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return lowStockItems;
     }
 }

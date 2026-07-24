@@ -48,15 +48,20 @@
                 </VBox>
 
                 <VBox alignment="CENTER"
+                      spacing="10"
                       style="-fx-border-color: lightgray;
-                         -fx-border-radius: 5;
-                         -fx-padding: 15;
-                         -fx-background-color: #f8f8f8;">
+             -fx-border-radius: 5;
+             -fx-padding: 15;
+             -fx-background-color: #f8f8f8;">
 
                     <Label text="⚠ Low Stock"/>
+
                     <Label fx:id="lowStockLabel"
                            text="0"
                            style="-fx-font-size:22px; -fx-font-weight:bold;"/>
+
+                    <Button text="View Low Stock"
+                            onAction="#openLowStock"/>
 
                 </VBox>
 
@@ -96,7 +101,8 @@
             <!-- Navigation -->
             <VBox spacing="15" alignment="CENTER">
 
-                <Button text="🛒 New Sale" prefWidth="220"/>
+                <Button text="🛒 New Sale" prefWidth="220"
+                        onAction="#openSales"/>
 
                 <Button text="📦 Inventory"
                         prefWidth="220"

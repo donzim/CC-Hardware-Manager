@@ -7,12 +7,15 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.collections.transformation.FilteredList;
 import javafx.scene.control.TextField;
+import java.io.IOException;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -188,5 +191,20 @@ public class InventoryController implements Initializable {
             items.remove(selectedItem);
 
         }
+    }
+
+    @FXML
+    private void goHome(ActionEvent event) throws IOException {
+
+        FXMLLoader loader =
+                new FXMLLoader(getClass().getResource("dashboard.fxml"));
+
+        Parent root = loader.load();
+
+        Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+
+        stage.setScene(new Scene(root));
+        stage.setTitle("Dashboard");
+        stage.show();
     }
 }

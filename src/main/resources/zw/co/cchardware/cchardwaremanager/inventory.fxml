@@ -28,6 +28,13 @@
 
             <HBox spacing="10" alignment="CENTER_LEFT">
 
+                <Button text="🏠 Home"
+                        onAction="#goHome"/>
+
+                <Label text="Inventory"
+                       style="-fx-font-size:20px;
+                      -fx-font-weight:bold;"/>
+
                 <Button text="Add Item"
                         onAction="#addItem"/>
 

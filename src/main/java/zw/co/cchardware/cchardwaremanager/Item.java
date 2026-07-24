@@ -70,4 +70,17 @@ public class Item {
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
+
+    public String getStatus() {
+
+        if (quantity <= 5) {
+            return "Critical";
+        }
+
+        return "Low";
+    }
+
+
 }
+
+
