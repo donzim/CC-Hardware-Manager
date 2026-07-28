@@ -38,11 +38,25 @@ public class DatabaseConnection {
         );
         """;
 
+        String salesTable = """
+    CREATE TABLE IF NOT EXISTS sales (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        product_name TEXT NOT NULL,
+        quantity INTEGER NOT NULL,
+        unit_price REAL NOT NULL,
+        total REAL NOT NULL,
+        sale_date TEXT NOT NULL
+    );
+    """;
+
         try (Connection connection = connect();
              Statement statement = connection.createStatement()) {
 
             statement.execute(sql);
+            statement.execute(salesTable);
+
             System.out.println("Items table ready.");
+            System.out.println("Sales table ready.");
 
         } catch (SQLException e) {
             e.printStackTrace();

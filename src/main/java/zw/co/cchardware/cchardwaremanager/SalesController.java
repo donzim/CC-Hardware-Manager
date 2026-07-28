@@ -15,6 +15,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ResourceBundle;
+import java.sql.SQLException;
 
 import javafx.scene.control.TextField;
 
@@ -165,6 +166,36 @@ public class SalesController implements Initializable{
         }
     }
 
+    private void recordSale(String product, int quantity, double unitPrice) {
+
+        System.out.println("recordSale() called");
+        String sql = """
+        INSERT INTO sales
+        (product_name, quantity, unit_price, total, sale_date)
+        VALUES (?, ?, ?, ?, ?)
+        """;
+
+        double total = unitPrice * quantity;
+
+        String saleDate = java.time.LocalDateTime.now().toString();
+
+        try (Connection conn = DatabaseConnection.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, product);
+            pstmt.setInt(2, quantity);
+            pstmt.setDouble(3, unitPrice);
+            pstmt.setDouble(4, total);
+            pstmt.setString(5, saleDate);
+
+            pstmt.executeUpdate();
+            System.out.println("Sale inserted into database.");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     @FXML
     private void completeSale() {
 
@@ -181,6 +212,11 @@ public class SalesController implements Initializable{
         int quantity = Integer.parseInt(quantityField.getText());
         String product = productComboBox.getValue();
 
+        if (quantity <= 0) {
+            System.out.println("Quantity must be greater than zero.");
+            return;
+        }
+
         if (!hasEnoughStock(product, quantity)) {
 
             System.out.println("Not enough stock.");
@@ -188,16 +224,10 @@ public class SalesController implements Initializable{
             return;
 
         }
-
         deductStock(product, quantity);
+        recordSale(product, quantity, currentPrice);
 
         System.out.println("Sale completed successfully.");
-
-        if (quantity <= 0) {
-            System.out.println("Quantity must be greater than zero.");
-            return;
-        }
-
         System.out.println("Validation successful.");
     }
 

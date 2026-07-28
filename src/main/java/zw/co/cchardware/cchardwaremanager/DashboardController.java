@@ -98,4 +98,17 @@ public class DashboardController {
         stage.setTitle("New Sale");
         stage.show();
     }
+
+    @FXML
+    private void openSalesHistory(ActionEvent event) throws IOException {
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("sales-history.fxml"));
+
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+        Scene scene = new Scene(loader.load());
+
+        stage.setScene(scene);
+        stage.show();
+    }
 }

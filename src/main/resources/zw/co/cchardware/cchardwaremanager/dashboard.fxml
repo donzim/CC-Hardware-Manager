@@ -104,6 +104,10 @@
                 <Button text="🛒 New Sale" prefWidth="220"
                         onAction="#openSales"/>
 
+                <Button text="📜 Sales History"
+                        prefWidth="220"
+                        onAction="#openSalesHistory"/>
+
                 <Button text="📦 Inventory"
                         prefWidth="220"
                         onAction="#openInventory"/>
