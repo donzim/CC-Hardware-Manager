@@ -19,7 +19,14 @@ public class Sale {
     }
 
     public String getSaleDate() {
-        return saleDate;
+
+        java.time.LocalDateTime dateTime =
+                java.time.LocalDateTime.parse(saleDate);
+
+        java.time.format.DateTimeFormatter formatter =
+                java.time.format.DateTimeFormatter.ofPattern("dd MMM yyyy");
+
+        return dateTime.format(formatter);
     }
 
     public String getProductName() {

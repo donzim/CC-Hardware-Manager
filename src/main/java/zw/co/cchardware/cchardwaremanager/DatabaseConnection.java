@@ -27,7 +27,7 @@ public class DatabaseConnection {
 
     public static void createTable() {
 
-        String sql = """
+        String itemsTable = """
         CREATE TABLE IF NOT EXISTS items (
             id INTEGER PRIMARY KEY,
             name TEXT NOT NULL,
@@ -48,15 +48,28 @@ public class DatabaseConnection {
         sale_date TEXT NOT NULL
     );
     """;
+        String purchaseTable = """
+        CREATE TABLE IF NOT EXISTS purchases (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+        product_name TEXT NOT NULL,
+        quantity INTEGER NOT NULL,
+        purchase_price REAL NOT NULL,
+        supplier TEXT,
+        notes TEXT,
+        purchase_date TEXT NOT NULL
+);
+        """;
 
         try (Connection connection = connect();
              Statement statement = connection.createStatement()) {
 
-            statement.execute(sql);
+            statement.execute(itemsTable);
             statement.execute(salesTable);
+            statement.execute(purchaseTable);
 
             System.out.println("Items table ready.");
             System.out.println("Sales table ready.");
+            System.out.println("Purchases table ready.");
 
         } catch (SQLException e) {
             e.printStackTrace();

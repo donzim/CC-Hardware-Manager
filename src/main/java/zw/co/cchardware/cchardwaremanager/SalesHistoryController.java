@@ -13,6 +13,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.Initializable;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TextField;
 
 import java.net.URL;
 import java.sql.*;
@@ -56,15 +58,45 @@ public class SalesHistoryController implements Initializable {
     @FXML
     private TableColumn<Sale, Double> totalColumn;
 
+    @FXML
+    private TextField searchField;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("saleDate"));
         productColumn.setCellValueFactory(new PropertyValueFactory<>("productName"));
         quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         priceColumn.setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
+        priceColumn.setCellFactory(column -> new TableCell<>() {
+            @Override
+            protected void updateItem(Double item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(String.format("$%.2f", item));
+                }
+            }
+        });
+
         totalColumn.setCellValueFactory(new PropertyValueFactory<>("total"));
+        totalColumn.setCellFactory(column -> new TableCell<>() {
+            @Override
+            protected void updateItem(Double item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(String.format("$%.2f", item));
+                }
+            }
+        });
 
         loadSales();
+        searchField.textProperty().addListener(
+                (observable, oldValue, newValue) -> searchSales());
     }
 
     private void loadSales() {
@@ -90,6 +122,39 @@ public class SalesHistoryController implements Initializable {
             }
 
             salesTable.setItems(salesList);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void searchSales() {
+
+        ObservableList<Sale> filteredList = FXCollections.observableArrayList();
+
+        String keyword = searchField.getText().toLowerCase();
+
+        String sql = "SELECT * FROM sales WHERE LOWER(product_name) LIKE ?";
+
+        try (Connection conn = DatabaseConnection.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, "%" + keyword + "%");
+
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+
+                filteredList.add(new Sale(
+                        rs.getString("sale_date"),
+                        rs.getString("product_name"),
+                        rs.getInt("quantity"),
+                        rs.getDouble("unit_price"),
+                        rs.getDouble("total")
+                ));
+            }
+
+            salesTable.setItems(filteredList);
 
         } catch (SQLException e) {
             e.printStackTrace();
