@@ -310,4 +310,27 @@ public class DatabaseConnection {
 
         return lowStockItems;
     }
+
+    public static void increaseStock(String productName, int quantity) {
+
+        String sql = """
+            UPDATE items
+            SET quantity = quantity + ?
+            WHERE name = ?
+            """;
+
+        try (Connection connection = connect();
+             PreparedStatement statement =
+                     connection.prepareStatement(sql)) {
+
+            statement.setInt(1, quantity);
+            statement.setString(2, productName);
+
+            int rowsUpdated = statement.executeUpdate();
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -9,7 +9,6 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane prefHeight="668.0" prefWidth="658.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="zw.co.cchardware.cchardwaremanager.PurchasesController">
    <children>
       <Label layoutX="293.0" layoutY="54.0" text="Purchases">
@@ -17,7 +16,7 @@
             <Font size="20.0" />
          </font>
       </Label>
-      <Label layoutX="237.0" layoutY="371.0" text="Purchase History">
+      <Label layoutX="255.0" layoutY="373.0" text="Purchase History">
          <font>
             <Font size="20.0" />
          </font>
@@ -44,5 +43,6 @@
       <TextField fx:id="quantityField" layoutX="179.0" layoutY="133.0" promptText="Quantity" />
       <TextField fx:id="unitCostField" layoutX="179.0" layoutY="168.0" promptText="Unit Cost" />
       <TextArea fx:id="notesArea" layoutX="179.0" layoutY="246.0" prefHeight="88.0" prefWidth="316.0" />
+      <TextField fx:id="searchField" layoutX="43.0" layoutY="388.0" prefHeight="26.0" prefWidth="200.0" promptText="Search product..." />
    </children>
 </AnchorPane>

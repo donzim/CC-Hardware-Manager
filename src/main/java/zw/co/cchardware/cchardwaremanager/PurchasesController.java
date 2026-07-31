@@ -16,6 +16,14 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import javafx.scene.control.TextField;
+
+import java.io.IOException;
+
 public class PurchasesController {
 
     private ObservableList<Purchase> purchaseList = FXCollections.observableArrayList();
@@ -61,6 +69,9 @@ public class PurchasesController {
 
     @FXML
     private TableColumn<Purchase, String> notesColumn;
+
+    @FXML
+    private TextField searchField;
 
     @FXML
     private void recordPurchase(ActionEvent event) {
@@ -119,6 +130,8 @@ public class PurchasesController {
             pstmt.setString(6, purchaseDate);
 
             pstmt.executeUpdate();
+
+            DatabaseConnection.increaseStock(product, quantity);
 
             loadPurchases();
 
@@ -179,6 +192,42 @@ public class PurchasesController {
         }
     }
 
+    private void searchPurchases() {
+
+        purchaseList.clear();
+
+        String keyword = searchField.getText().toLowerCase();
+
+        String sql =
+                "SELECT * FROM purchases WHERE LOWER(product_name) LIKE ? ORDER BY id DESC";
+
+        try (Connection conn = DatabaseConnection.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, "%" + keyword + "%");
+
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+
+                purchaseList.add(new Purchase(
+                        rs.getInt("id"),
+                        rs.getString("product_name"),
+                        rs.getInt("quantity"),
+                        rs.getDouble("purchase_price"),
+                        rs.getString("supplier"),
+                        rs.getString("notes"),
+                        rs.getString("purchase_date")
+                ));
+            }
+
+            purchaseTable.setItems(purchaseList);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     @FXML
     public void initialize() {
 
@@ -190,11 +239,25 @@ public class PurchasesController {
         notesColumn.setCellValueFactory(new PropertyValueFactory<>("notes"));
 
         loadPurchases();
+
+        searchField.textProperty().addListener(
+                (observable, oldValue, newValue) -> searchPurchases());
     }
 
     @FXML
-    private void goHome(ActionEvent event) {
+    private void goHome(ActionEvent event) throws IOException {
 
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource("dashboard.fxml"));
+
+        Scene scene = new Scene(loader.load());
+
+        Stage stage = (Stage) ((Node) event.getSource())
+                .getScene()
+                .getWindow();
+
+        stage.setScene(scene);
+        stage.show();
     }
 
 }
