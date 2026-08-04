@@ -116,6 +116,10 @@
                         prefWidth="220"
                         onAction="#openInventory"/>
 
+                <Button text="💰 Expenses"
+                        prefWidth="220"
+                        onAction="#openExpenses"/>
+
                 <Button text="🧾 Quotations" prefWidth="220"/>
 
                 <Button text="📄 Receipts" prefWidth="220"/>

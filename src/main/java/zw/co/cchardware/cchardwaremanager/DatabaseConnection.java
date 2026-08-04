@@ -60,16 +60,29 @@ public class DatabaseConnection {
 );
         """;
 
+        String expenseTable = """
+CREATE TABLE IF NOT EXISTS expenses (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    expense_name TEXT NOT NULL,
+    category TEXT NOT NULL,
+    amount REAL NOT NULL,
+    notes TEXT,
+    expense_date TEXT NOT NULL
+);
+""";
+
         try (Connection connection = connect();
              Statement statement = connection.createStatement()) {
 
             statement.execute(itemsTable);
             statement.execute(salesTable);
             statement.execute(purchaseTable);
+            statement.execute(expenseTable);
 
             System.out.println("Items table ready.");
             System.out.println("Sales table ready.");
             System.out.println("Purchases table ready.");
+            System.out.println("Expenses table ready.");
 
         } catch (SQLException e) {
             e.printStackTrace();
