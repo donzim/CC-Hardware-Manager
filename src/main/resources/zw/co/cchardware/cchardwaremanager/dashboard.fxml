@@ -124,7 +124,9 @@
 
                 <Button text="📄 Receipts" prefWidth="220"/>
 
-                <Button text="📊 Reports" prefWidth="220"/>
+                <Button text="📊 Reports"
+                        prefWidth="220"
+                        onAction="#openReports"/>
 
                 <Button text="⚙ Settings" prefWidth="220"/>
 

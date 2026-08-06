@@ -346,4 +346,319 @@ CREATE TABLE IF NOT EXISTS expenses (
             e.printStackTrace();
         }
     }
+    public static ObservableList<TopSellingProduct> getTopSellingProducts() {
+
+        ObservableList<TopSellingProduct> products =
+                FXCollections.observableArrayList();
+
+        String sql = """
+            SELECT product_name,
+                   SUM(quantity) AS total_sold
+            FROM sales
+            GROUP BY product_name
+            ORDER BY total_sold DESC
+            LIMIT 10
+            """;
+
+        try (Connection connection = connect();
+             Statement statement = connection.createStatement();
+             ResultSet result = statement.executeQuery(sql)) {
+
+            while (result.next()) {
+
+                products.add(new TopSellingProduct(
+                        result.getString("product_name"),
+                        result.getInt("total_sold")
+                ));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return products;
+    }
+
+    public static ObservableList<TopSellingProduct> getTopSellingProducts(
+            int month,
+            int year) {
+
+        ObservableList<TopSellingProduct> products =
+                FXCollections.observableArrayList();
+
+        String sql = """
+            SELECT product_name,
+                   SUM(quantity) AS total_sold
+            FROM sales
+            WHERE strftime('%Y', sale_date) = ?
+            AND strftime('%m', sale_date) = ?
+            GROUP BY product_name
+            ORDER BY total_sold DESC
+            LIMIT 10
+            """;
+
+        try (Connection connection = connect();
+             PreparedStatement statement =
+                     connection.prepareStatement(sql)) {
+
+            statement.setString(1, String.valueOf(year));
+            statement.setString(2, String.format("%02d", month));
+
+            ResultSet result = statement.executeQuery();
+
+            while (result.next()) {
+
+                products.add(new TopSellingProduct(
+
+                        result.getString("product_name"),
+
+                        result.getInt("total_sold")
+
+                ));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return products;
+    }
+    public static double getTotalPurchasesValue() {
+
+        String sql = "SELECT SUM(quantity * purchase_price) FROM purchases";
+
+        try (Connection connection = connect();
+             Statement statement = connection.createStatement();
+             ResultSet result = statement.executeQuery(sql)) {
+
+            if (result.next()) {
+                return result.getDouble(1);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return 0.0;
+    }
+    public static double getTotalExpenses() {
+
+        String sql = "SELECT SUM(amount) FROM expenses";
+
+        try (Connection connection = connect();
+             Statement statement = connection.createStatement();
+             ResultSet result = statement.executeQuery(sql)) {
+
+            if (result.next()) {
+                return result.getDouble(1);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return 0.0;
+    }
+    public static double getTotalSalesValue() {
+
+        String sql = "SELECT SUM(total) FROM sales";
+
+        try (Connection connection = connect();
+             Statement statement = connection.createStatement();
+             ResultSet result = statement.executeQuery(sql)) {
+
+            if (result.next()) {
+                return result.getDouble(1);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return 0.0;
+    }
+    public static double getEstimatedProfit() {
+
+        return getTotalSalesValue()
+                - getTotalPurchasesValue()
+                - getTotalExpenses();
+    }
+    public static double getTodaySales() {
+
+        String sql = """
+            SELECT SUM(total)
+            FROM sales
+            WHERE sale_date = DATE('now', 'localtime')
+            """;
+
+        try (Connection connection = connect();
+             Statement statement = connection.createStatement();
+             ResultSet result = statement.executeQuery(sql)) {
+
+            if (result.next()) {
+                return result.getDouble(1);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return 0.0;
+    }
+    public static double getWeeklySales() {
+
+        String sql = """
+            SELECT SUM(total)
+            FROM sales
+            WHERE sale_date >= DATE('now', '-6 days')
+            """;
+
+        try (Connection connection = connect();
+             Statement statement = connection.createStatement();
+             ResultSet result = statement.executeQuery(sql)) {
+
+            if (result.next()) {
+                return result.getDouble(1);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return 0.0;
+    }
+    public static double getMonthlySales() {
+
+        String sql = """
+            SELECT SUM(total)
+            FROM sales
+            WHERE strftime('%Y-%m', sale_date) =
+                  strftime('%Y-%m', 'now')
+            """;
+
+        try (Connection connection = connect();
+             Statement statement = connection.createStatement();
+             ResultSet result = statement.executeQuery(sql)) {
+
+            if (result.next()) {
+                return result.getDouble(1);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return 0.0;
+    }
+    public static double getMonthlySales(int month, int year) {
+
+        String sql = """
+            SELECT SUM(total)
+            FROM sales
+            WHERE strftime('%Y', sale_date) = ?
+            AND strftime('%m', sale_date) = ?
+            """;
+
+        try (Connection connection = connect();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setString(1, String.valueOf(year));
+            statement.setString(2, String.format("%02d", month));
+
+            ResultSet result = statement.executeQuery();
+
+            if (result.next()) {
+                return result.getDouble(1);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return 0.0;
+    }
+    public static double getMonthlyPurchases(int month, int year) {
+
+        String sql = """
+            SELECT SUM(quantity * purchase_price)
+            FROM purchases
+            WHERE strftime('%Y', purchase_date) = ?
+            AND strftime('%m', purchase_date) = ?
+            """;
+
+        try (Connection connection = connect();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setString(1, String.valueOf(year));
+            statement.setString(2, String.format("%02d", month));
+
+            ResultSet result = statement.executeQuery();
+
+            if (result.next()) {
+                return result.getDouble(1);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return 0.0;
+    }
+
+    public static double getMonthlyExpenses(int month, int year) {
+
+        String sql = """
+            SELECT SUM(amount)
+            FROM expenses
+            WHERE strftime('%Y', expense_date) = ?
+            AND strftime('%m', expense_date) = ?
+            """;
+
+        try (Connection connection = connect();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setString(1, String.valueOf(year));
+            statement.setString(2, String.format("%02d", month));
+
+            ResultSet result = statement.executeQuery();
+
+            if (result.next()) {
+                return result.getDouble(1);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return 0.0;
+    }
+    public static double getYearlySales() {
+
+        String sql = """
+            SELECT SUM(total)
+            FROM sales
+            WHERE strftime('%Y', sale_date) =
+                  strftime('%Y', 'now')
+            """;
+
+        try (Connection connection = connect();
+             Statement statement = connection.createStatement();
+             ResultSet result = statement.executeQuery(sql)) {
+
+            if (result.next()) {
+                return result.getDouble(1);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return 0.0;
+    }
+    public static double getEstimatedProfit(int month, int year) {
+
+        return getMonthlySales(month, year)
+                - getMonthlyPurchases(month, year)
+                - getMonthlyExpenses(month, year);
+    }
 }

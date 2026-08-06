@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane prefHeight="710.0" prefWidth="657.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="zw.co.cchardware.cchardwaremanager.ReportsController">
+   <children>
+      <Label layoutX="226.0" layoutY="41.0" text="Business Reports">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <Label layoutX="63.0" layoutY="100.0" text="Sales" underline="true">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+      <Label layoutX="63.0" layoutY="134.0" text="Today's Sales" />
+      <Label layoutX="63.0" layoutY="165.0" text="This Week" />
+      <Label layoutX="63.0" layoutY="193.0" text="This Month" />
+      <Label layoutX="63.0" layoutY="220.0" text="This Year" />
+      <Label layoutX="57.0" layoutY="248.0" text="Inventory" underline="true">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+      <Label layoutX="63.0" layoutY="289.0" text="Inventory Vlaue" />
+      <Label layoutX="63.0" layoutY="319.0" text="Potential Sales" />
+      <Label layoutX="63.0" layoutY="346.0" text="Low Stock Items" />
+      <Label layoutX="51.0" layoutY="379.0" text="Business" underline="true">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+      <Label layoutX="63.0" layoutY="415.0" text="Purchases" />
+      <Label layoutX="63.0" layoutY="448.0" text="Expenses" />
+      <Label layoutX="63.0" layoutY="482.0" text="Estimated Profits" />
+      <Label layoutX="57.0" layoutY="516.0" text="Top 10 Selling Products " underline="true">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+      <TableView fx:id="topProductsTable" layoutX="36.0" layoutY="553.0" prefHeight="138.0" prefWidth="495.0">
+        <columns>
+          <TableColumn fx:id="productColumn" prefWidth="323.99992752075195" text="Product" />
+          <TableColumn fx:id="quantitySoldColumn" prefWidth="168.00006103515625" text="Quantinty Sold" />
+        </columns>
+      </TableView>
+      <Button fx:id="backButton" layoutX="554.0" layoutY="659.0" mnemonicParsing="false" onAction="#goHome" text="Back" />
+      <Label fx:id="todaySalesLabel" layoutX="226.0" layoutY="134.0" text="0" />
+      <Label fx:id="weekSalesLabel" layoutX="226.0" layoutY="165.0" text="0" />
+      <Label fx:id="monthSalesLabel" layoutX="226.0" layoutY="193.0" text="0" />
+      <Label fx:id="yearSalesLabel" layoutX="226.0" layoutY="220.0" text="0" />
+      <Label fx:id="inventoryValueLabel" layoutX="226.0" layoutY="289.0" text="0" />
+      <Label fx:id="potentialSalesLabel" layoutX="226.0" layoutY="319.0" text="0" />
+      <Label fx:id="lowStockLabel" layoutX="226.0" layoutY="346.0" text="0" />
+      <Label fx:id="purchasesLabel" layoutX="226.0" layoutY="415.0" text="0" />
+      <Label fx:id="expensesLabel" layoutX="226.0" layoutY="448.0" text="0" />
+      <Label fx:id="profitLabel" layoutX="226.0" layoutY="482.0" text="0" />
+      <Label layoutX="393.0" layoutY="134.0" text="Month" />
+      <Label layoutX="393.0" layoutY="165.0" text="Year" />
+      <Button fx:id="refreshButton" layoutX="395.0" layoutY="198.0" mnemonicParsing="false" onAction="#refreshReport" text="Refresh" />
+      <ComboBox fx:id="monthComboBox" layoutX="470.0" layoutY="130.0" prefWidth="150.0" />
+      <ComboBox fx:id="yearComboBox" layoutX="470.0" layoutY="161.0" prefWidth="150.0" />
+   </children>
+</AnchorPane>

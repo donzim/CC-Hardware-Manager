@@ -16,6 +16,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ResourceBundle;
 import java.sql.SQLException;
+import java.time.LocalDate;
 
 import javafx.scene.control.TextField;
 
@@ -177,7 +178,7 @@ public class SalesController implements Initializable{
 
         double total = unitPrice * quantity;
 
-        String saleDate = java.time.LocalDateTime.now().toString();
+        String saleDate = LocalDate.now().toString();
 
         try (Connection conn = DatabaseConnection.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {

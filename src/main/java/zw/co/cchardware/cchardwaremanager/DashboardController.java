@@ -142,4 +142,19 @@ public class DashboardController {
         stage.setScene(scene);
         stage.show();
     }
+    @FXML
+    private void openReports(ActionEvent event) throws IOException {
+
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource("reports.fxml"));
+
+        Scene scene = new Scene(loader.load());
+
+        Stage stage = (Stage) ((Node) event.getSource())
+                .getScene()
+                .getWindow();
+
+        stage.setScene(scene);
+        stage.show();
+    }
 }
