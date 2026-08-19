@@ -2,6 +2,7 @@ package zw.co.cchardware.cchardwaremanager;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 
 import java.sql.Connection;
@@ -71,7 +72,55 @@ public class PurchasesController {
     private TableColumn<Purchase, String> notesColumn;
 
     @FXML
+    private TextField sellingPriceField;
+    @FXML
     private TextField searchField;
+
+    @FXML
+    private Button deletePurchaseButton;
+
+    @FXML
+    private Button editPurchaseButton;
+
+    @FXML
+    private void editPurchase(ActionEvent event) {
+
+        Purchase selectedPurchase =
+                purchaseTable.getSelectionModel().getSelectedItem();
+
+        if (selectedPurchase == null) {
+
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("No Selection");
+            alert.setHeaderText(null);
+            alert.setContentText("Please select a purchase to edit.");
+            alert.showAndWait();
+
+            return;
+        }
+
+        try {
+
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("edit-purchase.fxml"));
+
+            Parent root = loader.load();
+
+            EditPurchaseController controller = loader.getController();
+
+            controller.setPurchasesController(this);
+            controller.setPurchase(selectedPurchase);
+
+            Stage stage = new Stage();
+            stage.setTitle("Edit Purchase");
+            stage.setScene(new Scene(root));
+            stage.setResizable(false);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     @FXML
     private void recordPurchase(ActionEvent event) {
@@ -79,10 +128,11 @@ public class PurchasesController {
         String product = productField.getText().trim();
         String quantityText = quantityField.getText().trim();
         String unitCostText = unitCostField.getText().trim();
+        String sellingPriceText = sellingPriceField.getText().trim();
         String supplier = supplierField.getText().trim();
         String notes = notesArea.getText().trim();
 
-        if (product.isEmpty() || quantityText.isEmpty() || unitCostText.isEmpty()) {
+        if (product.isEmpty() || quantityText.isEmpty() || unitCostText.isEmpty() || sellingPriceText.isEmpty()) {
 
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Missing Information");
@@ -94,12 +144,12 @@ public class PurchasesController {
         }
         int quantity;
         double unitCost;
-
+        double sellingPrice;
         try {
 
             quantity = Integer.parseInt(quantityText);
             unitCost = Double.parseDouble(unitCostText);
-
+            sellingPrice = Double.parseDouble(sellingPriceText);
         } catch (NumberFormatException e) {
 
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -131,7 +181,8 @@ public class PurchasesController {
 
             pstmt.executeUpdate();
 
-            DatabaseConnection.increaseStock(product, quantity);
+            DatabaseConnection.increaseStock(product, quantity, unitCost,
+                    sellingPrice);;
 
             loadPurchases();
 
@@ -140,6 +191,7 @@ public class PurchasesController {
             unitCostField.clear();
             supplierField.clear();
             notesArea.clear();
+            sellingPriceField.clear();
 
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Success");
@@ -160,7 +212,7 @@ public class PurchasesController {
         }
 
     }
-    private void loadPurchases() {
+    public void loadPurchases() {
 
         purchaseList.clear();
 
@@ -258,6 +310,48 @@ public class PurchasesController {
 
         stage.setScene(scene);
         stage.show();
+    }
+
+    @FXML
+    private void deletePurchase(ActionEvent event) {
+
+        Purchase selectedPurchase =
+                purchaseTable.getSelectionModel().getSelectedItem();
+
+        if (selectedPurchase == null) {
+
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+
+            alert.setTitle("No Selection");
+            alert.setHeaderText(null);
+            alert.setContentText("Please select a purchase to delete.");
+
+            alert.showAndWait();
+
+            return;
+        }
+
+        Alert confirmation =
+                new Alert(Alert.AlertType.CONFIRMATION);
+
+        confirmation.setTitle("Delete Purchase");
+        confirmation.setHeaderText(null);
+
+        confirmation.setContentText(
+                "Delete purchase of "
+                        + selectedPurchase.getProductName()
+                        + "?");
+
+        ButtonType result =
+                confirmation.showAndWait().orElse(ButtonType.CANCEL);
+
+        if (result == ButtonType.OK) {
+
+            DatabaseConnection.deletePurchase(
+                    selectedPurchase.getId());
+
+            loadPurchases();
+        }
     }
 
 }

@@ -55,4 +55,24 @@ public class Purchase {
     public String getPurchaseDate() {
         return purchaseDate;
     }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public void setPurchasePrice(double purchasePrice) {
+        this.purchasePrice = purchasePrice;
+    }
+
+    public void setSupplier(String supplier) {
+        this.supplier = supplier;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
 }

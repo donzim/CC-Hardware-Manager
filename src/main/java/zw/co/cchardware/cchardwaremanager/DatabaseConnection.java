@@ -324,23 +324,64 @@ CREATE TABLE IF NOT EXISTS expenses (
         return lowStockItems;
     }
 
-    public static void increaseStock(String productName, int quantity) {
+    public static void increaseStock(
+            String productName,
+            int quantity,
+            double purchasePrice,
+            double sellingPrice) {
 
-        String sql = """
-            UPDATE items
-            SET quantity = quantity + ?
-            WHERE name = ?
-            """;
+        String checkSql =
+                "SELECT id FROM items WHERE name = ?";
 
-        try (Connection connection = connect();
-             PreparedStatement statement =
-                     connection.prepareStatement(sql)) {
+        try (Connection connection = connect()) {
 
-            statement.setInt(1, quantity);
-            statement.setString(2, productName);
+            PreparedStatement checkStatement =
+                    connection.prepareStatement(checkSql);
 
-            int rowsUpdated = statement.executeUpdate();
+            checkStatement.setString(1, productName);
 
+            ResultSet result =
+                    checkStatement.executeQuery();
+
+            if (result.next()) {
+
+                String updateSql = """
+                UPDATE items
+                SET quantity = quantity + ?
+                WHERE name = ?
+                """;
+
+                PreparedStatement updateStatement =
+                        connection.prepareStatement(updateSql);
+
+                updateStatement.setInt(1, quantity);
+                updateStatement.setString(2, productName);
+
+                updateStatement.executeUpdate();
+
+            } else {
+
+                String insertSql = """
+                INSERT INTO items
+                (name,
+                 category,
+                 purchase_price,
+                 selling_price,
+                 quantity)
+                VALUES (?, ?, ?, ?, ?)
+                """;
+
+                PreparedStatement insertStatement =
+                        connection.prepareStatement(insertSql);
+
+                insertStatement.setString(1, productName);
+                insertStatement.setString(2, "General");
+                insertStatement.setDouble(3, purchasePrice);
+                insertStatement.setDouble(4, sellingPrice);
+                insertStatement.setInt(5, quantity);
+
+                insertStatement.executeUpdate();
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -604,6 +645,24 @@ CREATE TABLE IF NOT EXISTS expenses (
 
         return 0.0;
     }
+    public static void deletePurchase(int purchaseId) {
+
+        String sql = "DELETE FROM purchases WHERE id = ?";
+
+        try (Connection connection = connect();
+             PreparedStatement statement =
+                     connection.prepareStatement(sql)) {
+
+            statement.setInt(1, purchaseId);
+
+            statement.executeUpdate();
+
+            System.out.println("Purchase deleted successfully!");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static double getMonthlyExpenses(int month, int year) {
 
@@ -660,5 +719,60 @@ CREATE TABLE IF NOT EXISTS expenses (
         return getMonthlySales(month, year)
                 - getMonthlyPurchases(month, year)
                 - getMonthlyExpenses(month, year);
+    }
+
+    public static void updatePurchase(Purchase purchase) {
+
+        String sql = """
+        UPDATE purchases
+        SET product_name = ?,
+            quantity = ?,
+            purchase_price = ?,
+            supplier = ?,
+            notes = ?
+        WHERE id = ?
+        """;
+
+        try (Connection connection = connect();
+             PreparedStatement statement =
+                     connection.prepareStatement(sql)) {
+
+            statement.setString(1, purchase.getProductName());
+            statement.setInt(2, purchase.getQuantity());
+            statement.setDouble(3, purchase.getPurchasePrice());
+            statement.setString(4, purchase.getSupplier());
+            statement.setString(5, purchase.getNotes());
+            statement.setInt(6, purchase.getId());
+
+            statement.executeUpdate();
+
+            System.out.println("Purchase updated successfully!");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    public static void adjustStock(
+            String productName,
+            int quantityDifference) {
+
+        String sql = """
+        UPDATE items
+        SET quantity = quantity + ?
+        WHERE name = ?
+        """;
+
+        try (Connection connection = connect();
+             PreparedStatement statement =
+                     connection.prepareStatement(sql)) {
+
+            statement.setInt(1, quantityDifference);
+            statement.setString(2, productName);
+
+            statement.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
