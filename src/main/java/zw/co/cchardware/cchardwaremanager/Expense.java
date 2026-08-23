@@ -47,4 +47,20 @@ public class Expense {
     public String getExpenseDate() {
         return expenseDate;
     }
+
+    public void setExpenseName(String expenseName) {
+        this.expenseName = expenseName;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
 }

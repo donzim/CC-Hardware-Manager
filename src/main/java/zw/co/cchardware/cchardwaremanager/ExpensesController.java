@@ -24,9 +24,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.event.ActionEvent;
 
+import javafx.scene.Parent;
 import java.io.IOException;
+
 
 public class ExpensesController implements Initializable {
 
@@ -68,6 +69,12 @@ public class ExpensesController implements Initializable {
 
     @FXML
     private TableColumn<Expense, String> notesColumn;
+
+    @FXML
+    private Button deleteExpenseButton;
+
+    @FXML
+    private Button editExpenseButton;
 
     @FXML
     private void recordExpense(ActionEvent event) {
@@ -153,7 +160,7 @@ public class ExpensesController implements Initializable {
         }
     }
 
-    private void loadExpenses() {
+    public void loadExpenses() {
 
         expenseList.clear();
 
@@ -263,4 +270,100 @@ public class ExpensesController implements Initializable {
     }
     private ObservableList<Expense> expenseList =
             FXCollections.observableArrayList();
+
+
+    @FXML
+    private void deleteExpense(ActionEvent event) {
+
+        Expense selectedExpense =
+                expenseTable.getSelectionModel()
+                        .getSelectedItem();
+
+        if (selectedExpense == null) {
+
+            Alert alert =
+                    new Alert(Alert.AlertType.WARNING);
+
+            alert.setTitle("No Selection");
+            alert.setHeaderText(null);
+            alert.setContentText(
+                    "Please select an expense to delete.");
+
+            alert.showAndWait();
+
+            return;
+        }
+
+        Alert confirm =
+                new Alert(Alert.AlertType.CONFIRMATION);
+
+        confirm.setTitle("Confirm Delete");
+        confirm.setHeaderText(null);
+        confirm.setContentText(
+                "Delete selected expense?");
+
+        if (confirm.showAndWait().get()
+                == ButtonType.OK) {
+
+            DatabaseConnection.deleteExpense(
+                    selectedExpense.getId());
+
+            loadExpenses();
+        }
+    }
+
+    @FXML
+    private void editExpense(ActionEvent event) {
+
+        Expense selectedExpense =
+                expenseTable.getSelectionModel()
+                        .getSelectedItem();
+
+        if (selectedExpense == null) {
+
+            Alert alert =
+                    new Alert(Alert.AlertType.WARNING);
+
+            alert.setTitle("No Selection");
+            alert.setHeaderText(null);
+            alert.setContentText(
+                    "Please select an expense to edit.");
+
+            alert.showAndWait();
+
+            return;
+        }
+
+        try {
+
+            System.out.println(
+                    getClass().getResource(
+                            "edit-expense.fxml"));
+
+            FXMLLoader loader =
+                    new FXMLLoader(
+                            getClass().getResource(
+                                    "edit-expense.fxml"));
+
+            Parent root = loader.load();
+
+            EditExpenseController controller =
+                    loader.getController();
+
+            controller.setExpensesController(this);
+            controller.setExpense(selectedExpense);
+
+            Stage stage = new Stage();
+
+            stage.setTitle("Edit Expense");
+            stage.setScene(new Scene(root));
+            stage.setResizable(false);
+
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

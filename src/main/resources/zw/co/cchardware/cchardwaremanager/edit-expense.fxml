@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane prefHeight="610.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="zw.co.cchardware.cchardwaremanager.EditExpenseController">
+   <children>
+      <Label layoutX="72.0" layoutY="99.0" text="Expense Name" />
+      <Label layoutX="72.0" layoutY="148.0" text="Category" />
+      <Label layoutX="72.0" layoutY="195.0" text="Amount" />
+      <Label layoutX="72.0" layoutY="239.0" text="Notes" />
+      <Button fx:id="updateExpenseButton" layoutX="240.0" layoutY="386.0" mnemonicParsing="false" onAction="#updateExpense" text="Update Expense" />
+      <TextField fx:id="expenseNameField" layoutX="191.0" layoutY="95.0" prefHeight="26.0" prefWidth="176.0" />
+      <TextField fx:id="categoryField" layoutX="192.0" layoutY="144.0" prefHeight="26.0" prefWidth="176.0" />
+      <TextField fx:id="amountField" layoutX="191.0" layoutY="191.0" prefHeight="26.0" prefWidth="176.0" />
+      <TextArea fx:id="notesArea" layoutX="191.0" layoutY="242.0" prefHeight="126.0" prefWidth="176.0" />
+   </children>
+</AnchorPane>

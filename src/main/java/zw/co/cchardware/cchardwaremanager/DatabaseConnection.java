@@ -663,6 +663,24 @@ CREATE TABLE IF NOT EXISTS expenses (
             e.printStackTrace();
         }
     }
+    public static void deleteExpense(int expenseId) {
+
+        String sql = "DELETE FROM expenses WHERE id = ?";
+
+        try (Connection connection = connect();
+             PreparedStatement statement =
+                     connection.prepareStatement(sql)) {
+
+            statement.setInt(1, expenseId);
+
+            statement.executeUpdate();
+
+            System.out.println("Expense deleted successfully!");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static double getMonthlyExpenses(int month, int year) {
 
@@ -747,6 +765,45 @@ CREATE TABLE IF NOT EXISTS expenses (
             statement.executeUpdate();
 
             System.out.println("Purchase updated successfully!");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    public static void updateExpense(Expense expense) {
+
+        String sql = """
+        UPDATE expenses
+        SET expense_name = ?,
+            category = ?,
+            amount = ?,
+            notes = ?
+        WHERE id = ?
+        """;
+
+        try (Connection connection = connect();
+             PreparedStatement statement =
+                     connection.prepareStatement(sql)) {
+
+            statement.setString(1,
+                    expense.getExpenseName());
+
+            statement.setString(2,
+                    expense.getCategory());
+
+            statement.setDouble(3,
+                    expense.getAmount());
+
+            statement.setString(4,
+                    expense.getNotes());
+
+            statement.setInt(5,
+                    expense.getId());
+
+            statement.executeUpdate();
+
+            System.out.println(
+                    "Expense updated successfully!");
 
         } catch (SQLException e) {
             e.printStackTrace();
