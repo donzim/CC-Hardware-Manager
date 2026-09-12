@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="zw.co.cchardware.cchardwaremanager.EditSaleController">
+   <children>
+      <TextField fx:id="productField" layoutX="218.0" layoutY="89.0" promptText="Product Name" />
+      <TextField fx:id="quantityField" layoutX="218.0" layoutY="153.0" promptText="Quantity" />
+      <TextField fx:id="priceField" layoutX="218.0" layoutY="213.0" promptText="Unit Price" />
+      <Button layoutX="247.0" layoutY="281.0" mnemonicParsing="false" onAction="#saveChanges" text="Save Changes" />
+      <Button layoutX="266.0" layoutY="349.0" mnemonicParsing="false" onAction="#goBack" text="Cancel" />
+      <Label layoutX="254.0" layoutY="30.0" text="Edit Sale">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

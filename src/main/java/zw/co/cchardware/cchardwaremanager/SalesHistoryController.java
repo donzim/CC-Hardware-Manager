@@ -21,6 +21,8 @@ import java.sql.*;
 import java.util.ResourceBundle;
 
 import java.io.IOException;
+import javafx.scene.control.Button;
+import javafx.scene.control.Alert;
 
 public class SalesHistoryController implements Initializable {
 
@@ -60,6 +62,12 @@ public class SalesHistoryController implements Initializable {
 
     @FXML
     private TextField searchField;
+
+    @FXML
+    private Button deleteSaleButton;
+
+    @FXML
+    private Button editSaleButton;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -112,6 +120,7 @@ public class SalesHistoryController implements Initializable {
             while (rs.next()) {
 
                 salesList.add(new Sale(
+                        rs.getInt("id"),
                         rs.getString("sale_date"),
                         rs.getString("product_name"),
                         rs.getInt("quantity"),
@@ -146,6 +155,7 @@ public class SalesHistoryController implements Initializable {
             while (rs.next()) {
 
                 filteredList.add(new Sale(
+                        rs.getInt("id"),
                         rs.getString("sale_date"),
                         rs.getString("product_name"),
                         rs.getInt("quantity"),
@@ -158,6 +168,107 @@ public class SalesHistoryController implements Initializable {
 
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+    @FXML
+    private void deleteSale(ActionEvent event) {
+
+        Sale selectedSale =
+                salesTable.getSelectionModel()
+                        .getSelectedItem();
+
+        if (selectedSale == null) {
+
+            Alert alert =
+                    new Alert(Alert.AlertType.WARNING);
+
+            alert.setTitle("No Selection");
+            alert.setHeaderText(null);
+            alert.setContentText(
+                    "Please select a sale to delete.");
+
+            alert.showAndWait();
+
+            return;
+        }
+
+        DatabaseConnection.adjustStock(
+                selectedSale.getProductName(),
+                selectedSale.getQuantity());
+
+        DatabaseConnection.deleteSale(
+                selectedSale.getId());
+
+        loadSales();
+
+        Alert alert =
+                new Alert(Alert.AlertType.INFORMATION);
+
+        alert.setTitle("Success");
+        alert.setHeaderText(null);
+        alert.setContentText(
+                "Sale deleted successfully.");
+
+        alert.showAndWait();
+    }
+
+    @FXML
+    private void editSale(ActionEvent event) {
+
+        Sale selectedSale =
+                salesTable.getSelectionModel()
+                        .getSelectedItem();
+
+        if (selectedSale == null) {
+
+            Alert alert =
+                    new Alert(Alert.AlertType.WARNING);
+
+            alert.setTitle("No Selection");
+            alert.setHeaderText(null);
+            alert.setContentText(
+                    "Please select a sale to edit.");
+
+            alert.showAndWait();
+
+            return;
+        }
+
+        try {
+
+            FXMLLoader loader =
+                    new FXMLLoader(
+                            getClass().getResource("edit-sale.fxml"));
+
+            Scene scene =
+                    new Scene(loader.load());
+
+            EditSaleController controller =
+                    loader.getController();
+
+            controller.setSale(selectedSale);
+
+            Stage stage =
+                    (Stage) ((Node) event.getSource())
+                            .getScene()
+                            .getWindow();
+
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+
+            Alert alert =
+                    new Alert(Alert.AlertType.ERROR);
+
+            alert.setTitle("Error");
+            alert.setHeaderText(null);
+            alert.setContentText(
+                    "Unable to open Edit Sale.");
+
+            alert.showAndWait();
         }
     }
 }

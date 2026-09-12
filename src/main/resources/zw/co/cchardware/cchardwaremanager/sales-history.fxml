@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="zw.co.cchardware.cchardwaremanager.SalesHistoryController">
+<AnchorPane prefHeight="462.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="zw.co.cchardware.cchardwaremanager.SalesHistoryController">
    <children>
       <Label layoutX="227.0" layoutY="26.0" text="Sales History">
          <font>
@@ -24,7 +24,9 @@
             <TableColumn fx:id="totalColumn" prefWidth="72.800048828125" text="Total" />
         </columns>
       </TableView>
-      <Button layoutX="242.0" layoutY="340.0" mnemonicParsing="false" onAction="#goHome" text="Back to Dashboard" />
+      <Button layoutX="242.0" layoutY="406.0" mnemonicParsing="false" onAction="#goHome" text="Back to Dashboard" />
       <TextField fx:id="searchField" layoutX="33.0" layoutY="72.0" prefHeight="26.0" prefWidth="250.0" promptText="Search product..." />
+      <Button fx:id="deleteSaleButton" layoutX="196.0" layoutY="341.0" mnemonicParsing="false" onAction="#deleteSale" text="Delete Sale" />
+      <Button fx:id="editSaleButton" layoutX="332.0" layoutY="341.0" mnemonicParsing="false" onAction="#editSale" prefHeight="26.0" prefWidth="67.0" text="Edit Sale" />
    </children>
 </AnchorPane>

@@ -832,4 +832,74 @@ CREATE TABLE IF NOT EXISTS expenses (
             e.printStackTrace();
         }
     }
+    public static void deleteSale(int saleId) {
+
+        String sql = "DELETE FROM sales WHERE id = ?";
+
+        try (Connection connection = connect();
+             PreparedStatement statement =
+                     connection.prepareStatement(sql)) {
+
+            statement.setInt(1, saleId);
+
+            statement.executeUpdate();
+
+            System.out.println(
+                    "Sale deleted successfully!");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    public static void updateSale(Sale sale) {
+
+        String sql = """
+        UPDATE sales
+        SET product_name = ?,
+            quantity = ?,
+            unit_price = ?,
+            total = ?
+        WHERE id = ?
+        """;
+
+        try (Connection connection = connect();
+             PreparedStatement statement =
+                     connection.prepareStatement(sql)) {
+
+            statement.setString(1, sale.getProductName());
+            statement.setInt(2, sale.getQuantity());
+            statement.setDouble(3, sale.getUnitPrice());
+            statement.setDouble(4, sale.getTotal());
+            statement.setInt(5, sale.getId());
+
+            statement.executeUpdate();
+
+            System.out.println("Sale updated successfully!");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    public static int getCurrentStock(String productName) {
+
+        String sql = "SELECT quantity FROM items WHERE name = ?";
+
+        try (Connection connection = connect();
+             PreparedStatement statement =
+                     connection.prepareStatement(sql)) {
+
+            statement.setString(1, productName);
+
+            ResultSet result = statement.executeQuery();
+
+            if (result.next()) {
+                return result.getInt("quantity");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return 0;
+    }
 }
