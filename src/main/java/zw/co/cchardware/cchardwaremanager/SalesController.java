@@ -17,6 +17,11 @@ import java.sql.ResultSet;
 import java.util.ResourceBundle;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TableColumn;
+import javafx.collections.ObservableList;
+import javafx.collections.FXCollections;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 import javafx.scene.control.TextField;
 
@@ -26,10 +31,41 @@ public class SalesController implements Initializable{
     @FXML
     private ComboBox<String> productComboBox;
 
+    @FXML
+    private TableView<CartItem> cartTable;
+
+    @FXML
+    private TableColumn<CartItem, String> cartProductColumn;
+
+    @FXML
+    private TableColumn<CartItem, Integer> cartQuantityColumn;
+
+    @FXML
+    private TableColumn<CartItem, Double> cartPriceColumn;
+
+    @FXML
+    private TableColumn<CartItem, Double> cartTotalColumn;
+
+    private ObservableList<CartItem> cartItems =
+            FXCollections.observableArrayList();
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         loadProducts();
+        cartProductColumn.setCellValueFactory(
+                new PropertyValueFactory<>("productName"));
+
+        cartQuantityColumn.setCellValueFactory(
+                new PropertyValueFactory<>("quantity"));
+
+        cartPriceColumn.setCellValueFactory(
+                new PropertyValueFactory<>("unitPrice"));
+
+        cartTotalColumn.setCellValueFactory(
+                new PropertyValueFactory<>("total"));
+
+        cartTable.setItems(cartItems);
         productComboBox.setOnAction(e -> loadPrice());
         quantityField.textProperty().addListener((observable, oldValue, newValue) -> calculateTotal());
 
@@ -200,6 +236,50 @@ public class SalesController implements Initializable{
     @FXML
     private void completeSale() {
 
+        if (cartItems.isEmpty()) {
+
+            System.out.println("Cart is empty.");
+
+            return;
+        }
+
+        for (CartItem item : cartItems) {
+
+            if (!hasEnoughStock(
+                    item.getProductName(),
+                    item.getQuantity())) {
+
+                System.out.println(
+                        "Not enough stock for "
+                                + item.getProductName());
+
+                return;
+            }
+        }
+
+        for (CartItem item : cartItems) {
+
+            deductStock(
+                    item.getProductName(),
+                    item.getQuantity());
+
+            recordSale(
+                    item.getProductName(),
+                    item.getQuantity(),
+                    item.getUnitPrice());
+        }
+
+        cartItems.clear();
+
+        calculateGrandTotal();
+
+        System.out.println(
+                "Sale completed successfully.");
+    }
+
+    @FXML
+    private void addItem() {
+
         if (productComboBox.getValue() == null) {
             System.out.println("Select a product.");
             return;
@@ -210,26 +290,62 @@ public class SalesController implements Initializable{
             return;
         }
 
-        int quantity = Integer.parseInt(quantityField.getText());
-        String product = productComboBox.getValue();
+        int quantity =
+                Integer.parseInt(quantityField.getText());
 
-        if (quantity <= 0) {
-            System.out.println("Quantity must be greater than zero.");
-            return;
-        }
+        String product =
+                productComboBox.getValue();
 
         if (!hasEnoughStock(product, quantity)) {
 
             System.out.println("Not enough stock.");
 
             return;
+        }
+
+        CartItem item =
+                new CartItem(
+                        product,
+                        quantity,
+                        currentPrice
+                );
+
+        cartItems.add(item);
+
+        quantityField.clear();
+
+        calculateGrandTotal();
+    }
+    private void calculateGrandTotal() {
+
+        double grandTotal = 0;
+
+        for (CartItem item : cartItems) {
+
+            grandTotal += item.getTotal();
 
         }
-        deductStock(product, quantity);
-        recordSale(product, quantity, currentPrice);
 
-        System.out.println("Sale completed successfully.");
-        System.out.println("Validation successful.");
+        totalLabel.setText(
+                String.format("$%.2f", grandTotal));
+    }
+    @FXML
+    private void removeItem() {
+
+        CartItem selectedItem =
+                cartTable.getSelectionModel()
+                        .getSelectedItem();
+
+        if (selectedItem == null) {
+
+            System.out.println("Select an item to remove.");
+
+            return;
+        }
+
+        cartItems.remove(selectedItem);
+
+        calculateGrandTotal();
     }
 
 }
