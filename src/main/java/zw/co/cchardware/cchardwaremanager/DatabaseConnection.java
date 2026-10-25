@@ -902,4 +902,46 @@ CREATE TABLE IF NOT EXISTS expenses (
 
         return 0;
     }
+
+    public static void migrateSalesTable() {
+        String[][] columns = {
+                {"customer_name", "TEXT NOT NULL DEFAULT 'Walk-in Customer'"},
+                {"receipt_number", "TEXT"}
+        };
+
+        try (Connection connection = connect();
+             Statement statement = connection.createStatement()) {
+
+            for (String[] column : columns) {
+                boolean exists = false;
+
+                try (ResultSet result = statement.executeQuery(
+                        "PRAGMA table_info(sales)")) {
+
+                    while (result.next()) {
+                        if (column[0].equalsIgnoreCase(
+                                result.getString("name"))) {
+                            exists = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (!exists) {
+                    statement.executeUpdate(
+                            "ALTER TABLE sales ADD COLUMN "
+                                    + column[0] + " " + column[1]
+                    );
+                }
+            }
+
+            System.out.println("Sales table migration completed.");
+
+        } catch (SQLException e) {
+            throw new RuntimeException(
+                    "Could not migrate the sales table.", e);
+        }
+    }
+
+
 }

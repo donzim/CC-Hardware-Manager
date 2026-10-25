@@ -14,8 +14,6 @@ public class LoginController {
 
         Connection connection = DatabaseConnection.connect();
 
-        DatabaseConnection.createTable();
-
         if (connection != null) {
             System.out.println("Database connected successfully!");
         } else {
